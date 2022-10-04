@@ -3,39 +3,49 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginWithEmailAndPassword } from "../auth/authFunctions";
 import { useAuth } from "../auth/useAuth";
 import { supabase } from "../supabase/supabaseConfig";
-
+import { Alert, Toast } from "flowbite-react";
 import { HiLockClosed, HiEye, HiEyeOff, HiX } from "react-icons/hi";
 import { motion } from "framer-motion";
 import logo from "../img/logo.png";
-import { Button, Toast, Modal } from "flowbite-react";
-import Dialog from "./Dialog";
 
-const Login = () => {
+const Register = () => {
   const { authUser, setAuthUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-
   const [isEyeOff, setIsEyeOff] = useState(false);
   const navigate = useNavigate();
 
-  const login = async (e) => {
+  const register = async (e) => {
     e.preventDefault();
 
-    const result = await supabase
-      .from("users")
-      .select("email")
-      .eq("email", email);
-
-    if (result.data.length === 0) {
-      setErrorMsg("Email not found. Try another one.");
+    if (!email && !password && !passwordConfirm) {
+      setErrorMsg("All inputs are required!");
       return;
     }
 
-    let { user, error } = await loginWithEmailAndPassword(email, password);
-    if (error.message.includes("Invalid login credentials")) {
-      setErrorMsg("Wrong Email and Password combination");
+    if (password != passwordConfirm) {
+      setErrorMsg("Password doesn't match!");
+      return;
+    }
+
+    const insertUser = await supabase.from("users").insert({
+      email: email,
+    });
+
+    if (insertUser.error?.details?.includes("already exists")) {
+      setErrorMsg("Email already exists. Try Another.");
+      return;
+    }
+
+    let { user, session, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      setErrorMsg(error.message);
     }
     setAuthUser(user);
   };
@@ -55,16 +65,28 @@ const Login = () => {
     const { user, session, error } = await supabase.auth.signIn({
       provider: "google",
     });
+
     setAuthUser(user);
   };
 
   return (
-    <div className="h-screen bg-gray-200 relative flex flex-col lg:flex-row lg:justify-center items-center w-full">
+    <div className="h-screen  bg-gray-200 flex flex-col-reverse  lg:flex-row lg:justify-center items-center w-full">
+      <div className="bg-white flex-grow w-full lg:w-[65%] xl:w-[50%] lg:h-screen mt-4 lg:mt-0 lg:mr-2 rounded-t-2xl lg:rounded-l-none lg:rounded-r-3xl flex flex-col justify-evenly">
+        <div className=" flex flex-col justify-center items-center   ">
+          <motion.img
+            initial={{ opacity: 0, y: -200 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5 }}
+            className="p-5 mt-2 object-cover lg:max-w-[60%] w-[80%]"
+            src="https://themesbrand.com/borex/layouts/assets/images/login-img.png"
+          />
+        </div>
+      </div>
       <motion.div
-        initial={{ x: -200, opacity: 0 }}
+        initial={{ x: 200, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="lg:w-[50%] md:w-[65%] relative flex justify-center items-center bg-white lg:mx-10  w-[90%] rounded-xl mt-4 p-5  lg:max-w-[400px] lg:h-[70%]"
+        className="lg:w-[50%] md:w-[65%] relative  flex justify-center items-center bg-white lg:mx-10  w-[90%] rounded-xl mt-4 p-5  lg:max-w-[400px] lg:h-[70%]"
       >
         {errorMsg ? (
           <motion.div
@@ -86,6 +108,7 @@ const Login = () => {
             </Toast>
           </motion.div>
         ) : null}
+
         <div className=" flex flex-col justify-center items-center">
           <img src={logo} className="w-[60%] min-w-[175px]" />
           <h3 className="tracking-wide font-semibold mt-5">Welcome Back !</h3>
@@ -115,8 +138,7 @@ const Login = () => {
                 }
               }}
               type="text"
-              id="email-address-icon"
-              class={`bg-gray-50 border placeholder-gray-300  ${
+              className={`bg-gray-50 border placeholder-gray-300 ${
                 errorMsg ? "border-red-500" : "border-gray-300"
               } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="example@flowbite.com"
@@ -131,12 +153,9 @@ const Login = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                if (errorMsg) {
-                  setErrorMsg("");
-                }
+                if (errorMsg) setErrorMsg("");
               }}
               type={!isEyeOff ? "password" : "text"}
-              id="email-address-icon"
               class={`bg-gray-50 border placeholder-gray-300  ${
                 errorMsg ? "border-red-500" : "border-gray-300"
               } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
@@ -161,21 +180,48 @@ const Login = () => {
               )}
             </motion.div>
           </div>
-          <React.Fragment>
-            <p
-              className="text-xs underline mt-1 text-gray-400 cursor-pointer"
-              onClick={() => setOpenModal(true)}
+
+          <div class="relative w-[85%] mt-4">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+              <HiLockClosed className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            </div>
+            <input
+              value={passwordConfirm}
+              onChange={(e) => {
+                setPasswordConfirm(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
+              type={!isEyeOff ? "password" : "text"}
+              class={`bg-gray-50 border placeholder-gray-300  ${
+                errorMsg ? "border-red-500" : "border-gray-300"
+              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              placeholder="Website@123"
+            />
+            <motion.div
+              initial={{ x: 20, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1.5 }}
+              className="flex absolute inset-y-0 right-0 items-center pr-3 "
             >
-              Forgot your password?
-            </p>
-            {openModal ? <Dialog setOpenModal={setOpenModal} setEmail={setEmail} email={email} setErrorMsg={setErrorMsg} /> : null}
-          </React.Fragment>
+              {!isEyeOff ? (
+                <HiEye
+                  className="w-5 h-5 text-gray-500 dark:text-gray-400 cursor-pointer"
+                  onClick={() => setIsEyeOff(true)}
+                />
+              ) : (
+                <HiEyeOff
+                  className="w-5 h-5 text-gray-500 dark:text-gray-400 cursor-pointer"
+                  onClick={() => setIsEyeOff(false)}
+                />
+              )}
+            </motion.div>
+          </div>
 
           <button
-            onClick={login}
-            class="w-[85%] mt-2 lg:w-[50%] text-white bg-[#0F9D58] hover:bg-[#0F9D58]/90 focus:ring-4 focus:ring-[#0F9D58] font-medium rounded-xl text-sm px-5 py-2.5  mb-2 dark:bg-[#0F9D58] dark:hover:[#0F9D58] focus:outline-none dark:focus:[#0F9D58]"
+            onClick={register}
+            class="w-[85%] mt-4 lg:w-[50%] text-white bg-[#0F9D58] hover:bg-[#0F9D58]/90 focus:ring-4 focus:ring-[#0F9D58] font-medium rounded-xl text-sm px-5 py-2.5  mb-2 dark:bg-[#0F9D58] dark:hover:[#0F9D58] focus:outline-none dark:focus:[#0F9D58]"
           >
-            Log In
+            Sign Up
           </button>
           <p className="text-sm text-gray-400 mt-5">- Or you can join with -</p>
           <div className="w-[90%] flex flex-row flex-wrap justify-center mt-2">
@@ -224,25 +270,14 @@ const Login = () => {
           </div>
           <p className="text-sm text-gray-400 flex mt-6">
             Don't you have an account?{" "}
-            <Link to="/register">
-              <p className="ml-1 text-[#46469e] underline">Sign Up Now</p>
+            <Link to="/login">
+              <p className="ml-1 text-[#46469e] underline">Log In Now</p>
             </Link>{" "}
           </p>
         </div>
       </motion.div>
-      <div className="bg-white flex-grow w-full lg:w-[65%] xl:w-[50%] lg:h-screen mt-4 lg:mt-0 lg:ml-2 rounded-t-2xl lg:rounded-r-none lg:rounded-l-3xl flex flex-col justify-evenly">
-        <div className=" flex flex-col justify-center items-center   ">
-          <motion.img
-            initial={{ opacity: 0, y: -200 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5 }}
-            className="p-5 mt-2 object-cover lg:max-w-[60%] w-[80%]"
-            src="https://themesbrand.com/borex/layouts/assets/images/login-img.png"
-          />
-        </div>
-      </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;
