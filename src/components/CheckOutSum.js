@@ -32,7 +32,7 @@ const CheckOutSum = ({ productsInCart }) => {
 
           <tbody>
 
-            {productsInCart.map((product) => (
+          { /* productsInCart.map((product) => (
 
 
               <tr key={product.id} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer">
@@ -53,7 +53,7 @@ const CheckOutSum = ({ productsInCart }) => {
 
 
 
-            ))}
+          )) */}
           </tbody>
         </table>
       </div>

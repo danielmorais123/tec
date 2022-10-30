@@ -6,7 +6,7 @@ import { Divider } from '@mui/material'
 import { supabase } from '../supabase/supabaseConfig'
 import { useAuth } from '../auth/useAuth'
 import { Navigate, useNavigate } from 'react-router-dom'
-
+import { HiShoppingCart } from "react-icons/hi";
 const CartIcon = ({ productsInCart, setProductsInCart }) => {
 
     const [total, setTotal] = useState(0)
@@ -14,22 +14,22 @@ const CartIcon = ({ productsInCart, setProductsInCart }) => {
     const { authUser } = useAuth()
     const navigate = useNavigate()
 
-    useEffect(() => {
+ /*   useEffect(() => {
         let totalCheckout = 0
         productsInCart.forEach((product) => {
             totalCheckout += product.price;
 
         })
         setTotal(totalCheckout)
-    }, [productsInCart])
+    }, [productsInCart]) */
 
     return (
 
-        <div className="dropdown dropdown-end ">
-            <label tabIndex={0} className="btn btn-ghost !bg-transparent btn-circle  ">
-                <div className='relative cursor-pointer'>
-                    <FontAwesomeIcon icon={faCartShopping} className="!h-[19px] object-contain text-gray-400" />
-                    <span className='bg-red-400 text-white rounded-full px-1 text-xs absolute top-[-9px] right-[-9px]'>{productsInCart.length}</span>
+        <div className="dropdown dropdown-end relative w-5 h-5 mr-2">
+            <label tabIndex={0} className="btn btn-ghost !bg-transparent btn-circle w-full !h-5 items-start">
+                <div className='w-full cursor-pointer'>
+                    <FontAwesomeIcon icon={faCartShopping} className="!h-full w-full object-contain text-gray-400" />
+                    <span className='bg-red-400 text-white rounded-full px-1 text-2xs absolute top-[-9px] right-[-9px]'>{productsInCart.length}</span>
                 </div>
 
 
@@ -45,22 +45,7 @@ const CartIcon = ({ productsInCart, setProductsInCart }) => {
 
                 <Divider />
                 <div className='flex flex-col max-h-[250px] overflow-y-scroll  p-2 scrollbar-thin scrollbar-thumb-red-400 scrollbar-track-gray-100'>
-
-                    {productsInCart.map((product) => (
-                        <div className='p-3 flex justify-between flex-row bg-gray-50 text-black cursor-pointer rounded-lg m-2 ' key={product.id}>
-                            <div className='flex  items-center'>
-
-                                <img src={product.image} className="h-[40px] object-contain " />
-                                <div className='flex flex-col justify-between ml-2'>
-                                    <h1 className='tracking-wide'>{product.title}</h1>
-                                    <span className='text-xs text-gray-700 font-bold'>{product.price}€</span>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                    ))}
+                
                     <div className='flex items-center'>
                         <div className='ml-4'>
                             <h1 className='text-sm text-black font-semibold tracking-wide'>Total :</h1>

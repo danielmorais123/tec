@@ -39,9 +39,8 @@ const Login = () => {
       return;
     }
     if (!error) {
-      navigate("/")
+      navigate("/");
     }
-
   };
 
   const loginWithFacebook = async (e) => {
@@ -50,9 +49,10 @@ const Login = () => {
     const { user, session, error } = await supabase.auth.signIn({
       provider: "facebook",
     });
-
-    setAuthUser(user);
-    navigate("/")
+    if (!error) {
+      setAuthUser(user);
+      navigate("/");
+    }
   };
 
   const signInWithGoogle = async (e) => {
@@ -60,8 +60,10 @@ const Login = () => {
     const { user, session, error } = await supabase.auth.signIn({
       provider: "google",
     });
-    setAuthUser(user);
-    navigate("/")
+    if (!error) {
+      setAuthUser(user);
+      navigate("/");
+    }
   };
 
   return (
@@ -93,8 +95,8 @@ const Login = () => {
           </motion.div>
         ) : null}
         <div className=" flex flex-col justify-center items-center">
-          <img src={logo} className="w-[60%] min-w-[175px]" />
-          <h3 className="tracking-wide font-semibold mt-5">Welcome Back !</h3>
+          <img src={logo} className="w-[50%] min-w-[150px]" />
+          <h3 className="tracking-wide text-gray-500 font-semibold mt-3 text-lg">Welcome Back !</h3>
           <p className="text-xs text-gray-400 mt-2">
             Sign in to use our application
           </p>
@@ -122,8 +124,9 @@ const Login = () => {
               }}
               type="text"
               id="email-address-icon"
-              class={`bg-gray-50 border placeholder-gray-300  ${errorMsg ? "border-red-500" : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              class={`bg-gray-50 border placeholder-gray-300  ${
+                errorMsg ? "border-red-500" : "border-gray-300"
+              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="example@flowbite.com"
             />
           </div>
@@ -142,8 +145,9 @@ const Login = () => {
               }}
               type={!isEyeOff ? "password" : "text"}
               id="email-address-icon"
-              class={`bg-gray-50 border placeholder-gray-300  ${errorMsg ? "border-red-500" : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              class={`bg-gray-50 border placeholder-gray-300  ${
+                errorMsg ? "border-red-500" : "border-gray-300"
+              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="Website@123"
             />
             <motion.div
@@ -172,7 +176,14 @@ const Login = () => {
             >
               Forgot your password?
             </p>
-            {openModal ? <Dialog setOpenModal={setOpenModal} setEmail={setEmail} email={email} setErrorMsg={setErrorMsg} /> : null}
+            {openModal ? (
+              <Dialog
+                setOpenModal={setOpenModal}
+                setEmail={setEmail}
+                email={email}
+                setErrorMsg={setErrorMsg}
+              />
+            ) : null}
           </React.Fragment>
 
           <button

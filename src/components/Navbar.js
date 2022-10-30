@@ -3,6 +3,7 @@ import { useAuth } from "../auth/useAuth";
 import justicon from "../img/justicon.png";
 import { supabase } from "../supabase/supabaseConfig";
 import { HiCog } from "react-icons/hi";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { Divider } from "@mui/material";

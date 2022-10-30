@@ -9,7 +9,7 @@ export function AuthContextProvider({ children }) {
 
   const navigate = useNavigate();
   useEffect(() => {
-
+    console.log("AUTHEN")
 
     // Listen for changes on auth state (logged in, signed out, etc.)
     const { data: listener } = supabase.auth.onAuthStateChange(
@@ -32,7 +32,7 @@ export function AuthContextProvider({ children }) {
           if (error) alert("There was an error updating your password.");
         }
         if (event === "SIGNED_IN") {
-
+          console.log("sign in")
           if (!authUser) setAuthUser(session.user)
           if (session.user.identities[0].provider.toLowerCase() !== "email") {
 
@@ -59,7 +59,8 @@ export function AuthContextProvider({ children }) {
 
         }
         if (event === "SIGNED_OUT") {
-
+          console.log("sign out")
+          if (!authUser) setAuthUser(null)
           navigate("/login")
         }
 
@@ -76,13 +77,16 @@ export function AuthContextProvider({ children }) {
   useEffect(() => {
     // Check active sessions and sets the user
     const session = supabase.auth.session();
+    console.log({session})
     if (session) {
 
       setAuthUser(session.user)
 
     }
     else {
+      console.log("FICA NULO")
       setAuthUser(null)
+     
     }
   }, [])
 
