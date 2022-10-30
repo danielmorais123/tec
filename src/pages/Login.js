@@ -36,18 +36,23 @@ const Login = () => {
     let { user, error } = await loginWithEmailAndPassword(email, password);
     if (error.message.includes("Invalid login credentials")) {
       setErrorMsg("Wrong Email and Password combination");
+      return;
     }
-    setAuthUser(user);
+    if (!error) {
+      navigate("/")
+    }
+
   };
 
   const loginWithFacebook = async (e) => {
     e.preventDefault();
-    console.log("entrou facebook");
+
     const { user, session, error } = await supabase.auth.signIn({
       provider: "facebook",
     });
 
     setAuthUser(user);
+    navigate("/")
   };
 
   const signInWithGoogle = async (e) => {
@@ -56,6 +61,7 @@ const Login = () => {
       provider: "google",
     });
     setAuthUser(user);
+    navigate("/")
   };
 
   return (
@@ -116,9 +122,8 @@ const Login = () => {
               }}
               type="text"
               id="email-address-icon"
-              class={`bg-gray-50 border placeholder-gray-300  ${
-                errorMsg ? "border-red-500" : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              class={`bg-gray-50 border placeholder-gray-300  ${errorMsg ? "border-red-500" : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="example@flowbite.com"
             />
           </div>
@@ -137,9 +142,8 @@ const Login = () => {
               }}
               type={!isEyeOff ? "password" : "text"}
               id="email-address-icon"
-              class={`bg-gray-50 border placeholder-gray-300  ${
-                errorMsg ? "border-red-500" : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              class={`bg-gray-50 border placeholder-gray-300  ${errorMsg ? "border-red-500" : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="Website@123"
             />
             <motion.div

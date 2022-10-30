@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -7,7 +8,11 @@ module.exports = {
     "node_modules/react-daisyui/dist/**/*.js",
   ],
   theme: {
+    screens: {
+      'xs': '400px',
+      ...defaultTheme.screens,
+    },
     extend: {},
   },
-  plugins: [require("flowbite/plugin"), require("daisyui")],
+  plugins: [require("flowbite/plugin"), require("daisyui"), require('tailwind-scrollbar')],
 };

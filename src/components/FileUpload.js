@@ -1,9 +1,11 @@
 import { FileInput, Label } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase/supabaseConfig";
 
 const FileUpload = () => {
   const [eerror, setEerror] = useState();
+  const navigate = useNavigate()
 
   const uploadProfileFile = async (e) => {
     e.preventDefault();
@@ -11,34 +13,39 @@ const FileUpload = () => {
 
     let userAuth = supabase.auth.user();
 
+    if(!userAuth){
+      navigate("/login")
+      return;
+    }
+
     const result = await supabase
       .from("users")
       .select("email")
       .eq("email", userAuth.email);
 
-    console.log({ result });
+    
     if (result.data.length === 0) {
       setEerror("There was an error uploading your file");
       return;
     }
 
-    console.log({ eerror });
-
+   
+    if (e.target.files[0]) file = e.target.files[0];
     const resulta = await supabase
       .from("users")
       .update({
         photoUrl: file?.name,
       })
-      .eq("email", userAuth.email);
+      .eq("email", userAuth.email).select()
 
-    console.log({ resulta });
+    
 
-    if (e.target.files[0]) file = e.target.files[0];
+
     const { data, error } = await supabase.storage
       .from("images")
       .upload(`public/${file?.name}`, file);
 
-    console.log({ data, error });
+    
   };
 
   return (

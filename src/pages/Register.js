@@ -30,14 +30,19 @@ const Register = () => {
       return;
     }
 
-    const insertUser = await supabase.from("users").insert({
-      email: email,
-    });
 
-    if (insertUser.error?.details?.includes("already exists")) {
+    const userExists = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", email);
+
+    if (userExists.data.length > 0) {
       setErrorMsg("Email already exists. Try Another.");
       return;
     }
+
+
+
 
     let { user, session, error } = await supabase.auth.signUp({
       email: email,
@@ -46,18 +51,30 @@ const Register = () => {
 
     if (error) {
       setErrorMsg(error.message);
+      return;
     }
+
+
     setAuthUser(user);
   };
 
   const loginWithFacebook = async (e) => {
     e.preventDefault();
-    console.log("entrou facebook");
+
     const { user, session, error } = await supabase.auth.signIn({
       provider: "facebook",
     });
 
-    setAuthUser(user);
+    const insertUser = await supabase.from("users").insert({
+      id: user.id,
+      email: email,
+      createdAt: user.created_at,
+      provider: user.identities[0].provider
+    });
+
+
+
+    setAuthUser(session.user);
   };
 
   const signInWithGoogle = async (e) => {
@@ -65,7 +82,12 @@ const Register = () => {
     const { user, session, error } = await supabase.auth.signIn({
       provider: "google",
     });
-
+    const insertUser = await supabase.from("users").insert({
+      id: user.id,
+      email: email,
+      createdAt: user.created_at,
+      provider: user.identities[0].provider
+    });
     setAuthUser(user);
   };
 
@@ -138,9 +160,8 @@ const Register = () => {
                 }
               }}
               type="text"
-              className={`bg-gray-50 border placeholder-gray-300 ${
-                errorMsg ? "border-red-500" : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              className={`bg-gray-50 border placeholder-gray-300 ${errorMsg ? "border-red-500" : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="example@flowbite.com"
             />
           </div>
@@ -156,9 +177,8 @@ const Register = () => {
                 if (errorMsg) setErrorMsg("");
               }}
               type={!isEyeOff ? "password" : "text"}
-              class={`bg-gray-50 border placeholder-gray-300  ${
-                errorMsg ? "border-red-500" : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              class={`bg-gray-50 border placeholder-gray-300  ${errorMsg ? "border-red-500" : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="Website@123"
             />
             <motion.div
@@ -192,9 +212,8 @@ const Register = () => {
                 if (errorMsg) setErrorMsg("");
               }}
               type={!isEyeOff ? "password" : "text"}
-              class={`bg-gray-50 border placeholder-gray-300  ${
-                errorMsg ? "border-red-500" : "border-gray-300"
-              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+              class={`bg-gray-50 border placeholder-gray-300  ${errorMsg ? "border-red-500" : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="Website@123"
             />
             <motion.div

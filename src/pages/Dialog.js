@@ -13,7 +13,7 @@ const Dialog = ({ setOpenModal }) => {
         //// you can also set your own page for it.
       }
     );
-    console.log({ data, error });
+   
   };
 
   return (
