@@ -22,7 +22,7 @@ const Sidebar = ({ open, selected, setSelected }) => {
       />
 
       <ul
-        className={`flex mt-7 flex-col w-full ${
+        className={`flex mt-7 flex-col w-full items-center ${
           open ? "justify-start" : "justify-center"
         }`}
       >
@@ -51,7 +51,7 @@ const Sidebar = ({ open, selected, setSelected }) => {
             setSelected("chat");
             navigate("/chat/1");
           }}
-          className={`flex items-center ${
+          className={`flex !items-center ${
             !open &&
             selected === "chat" &&
             "w-fit mx-auto hover:bg-red-400 mt-3"
@@ -84,7 +84,7 @@ const Sidebar = ({ open, selected, setSelected }) => {
             setSelected("profile");
             navigate(`/profile/${authUser.id}`);
           }}
-          className={`flex items-center  ${
+          className={`flex items-center ${
             !open &&
             selected === "profile" &&
             "w-fit mx-auto hover:bg-red-400 mt-3"

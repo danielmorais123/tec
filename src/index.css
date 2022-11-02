@@ -20,6 +20,10 @@ code {
 }
 
 @layer components {
+  body{
+    @apply scrollbar-thin scrollbar-thumb-red-400 scrollbar-track-gray-100
+  }
+
   .links {
     @apply flex  hover:bg-red-500 transition cursor-pointer hover:text-white rounded-lg px-3 py-2 
   }

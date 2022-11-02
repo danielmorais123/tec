@@ -15,7 +15,14 @@ function App() {
   const [open, setOpen] = useState(false);
   const [productsInCart, setProductsInCart] = useState([]);
   const [selected, setSelected] = useState("shop");
-  const [idsProducts, setIdsProducts] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useMemo(() => {
+    supabase
+      .from("users")
+      .select("*")
+      .then((res) => setUsers(res.data));
+  }, []);
 
   return (
     <div>
@@ -39,6 +46,7 @@ function App() {
                     selected={selected}
                     setSelected={setSelected}
                     setProductsInCart={setProductsInCart}
+                    users={users}
                   />
                 }
               ></Route>
@@ -52,6 +60,7 @@ function App() {
                     setSelected={setSelected}
                     productsInCart={productsInCart}
                     setProductsInCart={setProductsInCart}
+                    users={users}
                   />
                 }
               ></Route>
@@ -66,6 +75,7 @@ function App() {
                     setSelected={setSelected}
                     productsInCart={productsInCart}
                     setProductsInCart={setProductsInCart}
+                    users={users}
                   />
                 }
               ></Route>
@@ -79,6 +89,7 @@ function App() {
                     setSelected={setSelected}
                     productsInCart={productsInCart}
                     setProductsInCart={setProductsInCart}
+                    users={users}
                   />
                 }
               ></Route>
@@ -92,6 +103,7 @@ function App() {
                     setSelected={setSelected}
                     productsInCart={productsInCart}
                     setProductsInCart={setProductsInCart}
+                    users={users}
                   />
                 }
               ></Route>

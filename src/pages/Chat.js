@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import ChatBetweenUsers from "../components/ChatBetweenUsers";
-import Chats from "../components/Chats";
-import Drawer from "../components/Drawer";
-import NavbarIntegrated from "../components/NavbarIntegrated";
-import Sidebar from "../components/Sidebar";
+import ChatBetweenUsers from "../components/Chat/ChatBetweenUsers";
+import Chats from "../components/Chat/Chats";
+
+import NavbarIntegrated from "../components/Navbar/NavbarIntegrated";
+
 import { supabase } from "../supabase/supabaseConfig";
 
 const Chat = ({
@@ -15,32 +15,36 @@ const Chat = ({
   setProductsInCart,
   selected,
   setSelected,
+  users,
 }) => {
   const { chatId } = useParams();
   const chatIdSelected = parseInt(chatId);
-  const [users, setUsers] = useState([]);
-  const [userIdWithAuthUser, setUserIdWithAuthUser] = useState();
- 
 
-  useEffect(() => {
-    supabase
-      .from("users")
-      .select("*")
-      .then((res) => setUsers(res.data));
-  }, []);
+  const [userIdWithAuthUser, setUserIdWithAuthUser] = useState();
 
   const { authUser } = useAuth();
 
+  useEffect(() => {
+    supabase
+      .from("cart")
+      .select("products")
+      .eq("id", authUser?.id)
+      .then((value) => {
+        if (value.data) setProductsInCart(value.data[0].products);
+      });
+  }, [authUser]);
+
   return (
     <div className="flex relative flex-row  min-h-screen">
-      <Sidebar open={open} selected={selected} setSelected={setSelected} />
-      <Drawer open={open} setOpen={setOpen} />
+      {/*<Sidebar open={open} selected={selected} setSelected={setSelected} />
+      <Drawer open={open} setOpen={setOpen} /> */}
       <div className="bg-gray-100 flex flex-col rounded-tl-[30px] flex-grow">
         <NavbarIntegrated
           setOpen={setOpen}
           open={open}
           productsInCart={productsInCart}
           setProductsInCart={setProductsInCart}
+          users={users}
         />
         <div className="flex flex-grow  my-3 mx-6 flex-col xl:flex-row">
           <Chats

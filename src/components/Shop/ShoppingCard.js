@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { faCartShopping, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { Rating } from "@mui/material";
 import { motion } from "framer-motion";
 
-import { supabase } from "../supabase/supabaseConfig";
-import { useAuth } from "../auth/useAuth";
+import { supabase } from "../../supabase/supabaseConfig";
+import { useAuth } from "../../auth/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCard = (props) => {
   const { title, created_at, category, benefits, price, rating, image, id } =
@@ -14,7 +15,7 @@ const ShoppingCard = (props) => {
 
   const { authUser } = useAuth();
 
-  console.log({ userSeller });
+  const navigate = useNavigate();
 
   const removeItemFromCard = (e) => {
     e.preventDefault();
@@ -67,8 +68,8 @@ const ShoppingCard = (props) => {
         whileInView={{ x: 0, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.5 }}
-        className="bg-gray-200 p-2 w-[95%] md:w-1/3 mx-auto rounded-2xl object-contain "
-        src={image[0]}
+        className="bg-gray-100 p-2 w-[95%] md:w-1/3 mx-auto rounded-2xl object-contain "
+        src={`https://hxedsbvrgndfewrzlynl.supabase.co/storage/v1/object/public/images/public/productsImages/${image}`}
       />
       <div className="flex flex-col w-[95%] mx-auto md:p-2 md:justify-between">
         <div>
@@ -122,10 +123,17 @@ const ShoppingCard = (props) => {
           </div>
         </div>
       </div>
-      <div className="absolute md:top-3 md:right-3 right-5 bottom-5 md:bottom-0">
+      <div
+        className="absolute md:top-3 md:right-3 right-5 bottom-5 md:bottom-0 cursor-pointer"
+        onClick={() => navigate(`/profile/${userSeller?.id}`)}
+      >
         <img
-          className="w-10 rounded-full h-10 object-contain "
-          src="https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg"
+          className="w-10 rounded-full h-10 bg-gray-300 object-contain "
+          src={
+            userSeller?.photoUrl
+              ? `https://hxedsbvrgndfewrzlynl.supabase.co/storage/v1/object/public/images/usersPhotos/${userSeller?.photoUrl}`
+              : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+          }
         />
       </div>
     </motion.div>

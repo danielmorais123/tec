@@ -1,18 +1,21 @@
-import { CircularProgress, Divider, Slider } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import { Divider, Slider } from "@mui/material";
+import React, { useMemo, useState } from "react";
 
-import { supabase } from "../supabase/supabaseConfig";
-import ShoppingCard from "./ShoppingCard";
+import { supabase } from "../../supabase/supabaseConfig";
+import ShoppingCard from "./../Shop/ShoppingCard";
 import { styled } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
   faBarsStaggered,
   faBinoculars,
+  faCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
-import { Button, Spinner } from "flowbite-react";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../auth/useAuth";
+import DialogResetPass from "../Modals/DialogResetPass";
+import ModalCreateItem from "../Modals/ModalCreateItem";
+
 const PrettoSlider = styled(Slider)({
   color: "rgb(168 85 247)",
   height: 8,
@@ -54,12 +57,17 @@ const PrettoSlider = styled(Slider)({
 
 const ShopCards = (props) => {
   const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState("");
   const [value, setValue] = useState([0, 1000]);
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageFile, setImageFile] = useState({});
+  const [price, setPrice] = useState();
   const [selectedTab, setSelectedTab] = useState("horizontal");
+  const [benefits, setBenefits] = useState([]);
+  const [categories, setCategories] = useState("");
 
   const { productsInCart, setProductsInCart } = props;
 
@@ -79,17 +87,7 @@ const ShopCards = (props) => {
       .then((res) => setUsers(res.data));
   }, []);
 
-  console.log({ authUser });
-
-  useMemo(() => {
-    supabase
-      .from("cart")
-      .select("products")
-      .eq("id", authUser?.id)
-      .then((value) => {
-        if (value.data) setProductsInCart(value.data[0].products);
-      });
-  }, [authUser]);
+  console.log({ openModal });
 
   return (
     <div className="flex-grow flex">
@@ -109,12 +107,54 @@ const ShopCards = (props) => {
               onChange={(e, newValue) => setValue(newValue)}
               valueLabelDisplay="auto"
             />
-            <button disabled className="bg-purple-400 text-white px-3 py-1 rounded-lg">
+            <button
+              disabled
+              className="bg-purple-400 text-white px-3 py-1 rounded-lg"
+            >
               <FontAwesomeIcon icon={faSearch} /> Search
             </button>
           </div>
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="w-[85%] md:w-[250px] h-fit relative md:mr-3 mx-auto md:mx-0 rounded-full p-2 bg-gray-100">
+          <div className="flex  items-center">
+            <React.Fragment>
+              <motion.div
+                onClick={() => setOpenModal(true)}
+                initial={{ x: -200, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1.5 }}
+                viewport={{ once: true }}
+                className="p-2 cursor-pointer"
+              >
+                <FontAwesomeIcon
+                  icon={faCirclePlus}
+                  className=" text-xl text-blue-500"
+                />
+              </motion.div>
+              {openModal ? (
+                <ModalCreateItem
+                  setOpenModal={setOpenModal}
+                  title={title}
+                  setTitle={setTitle}
+                  benefits={benefits}
+                  setBenefits={setBenefits}
+                  description={description}
+                  setDescription={setDescription}
+                  categories={categories}
+                  setCategories={setCategories}
+                  imageFile={imageFile}
+                  setImageFile={setImageFile}
+                  price={price}
+                  setPrice={setPrice}
+                />
+              ) : null}
+            </React.Fragment>
+
+            <motion.div
+              initial={{ x: -200, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1.5 }}
+              viewport={{ once: true }}
+              className="w-[85%] md:w-[250px] h-fit relative md:mr-3 mx-auto md:mx-0 rounded-full p-2 bg-gray-100"
+            >
               <FontAwesomeIcon icon={faSearch} size="sm" className="px-2" />
               <input
                 placeholder="Search..."
@@ -122,13 +162,13 @@ const ShopCards = (props) => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-            </div>
+            </motion.div>
             <motion.div
               initial={{ x: 200, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 1.5 }}
               viewport={{ once: true }}
-              className="self-end md:self-center  flex mr-5 mt-1 p-2 md:mr-2 md:mt-0  items-center"
+              className="self-end md:self-center justify-center  flex  mt-1 p-2 md:mr-2 md:mt-0  items-center"
             >
               <FontAwesomeIcon
                 icon={faBinoculars}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../supabase/supabaseConfig";
+import { supabase } from "../../supabase/supabaseConfig";
 
 const DialogResetPass = () => {
   const [password, setPassword] = useState("");

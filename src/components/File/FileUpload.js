@@ -1,8 +1,8 @@
 import { FileInput, Label } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/useAuth";
-import { supabase } from "../supabase/supabaseConfig";
+import { useAuth } from "../../auth/useAuth";
+import { supabase } from "../../supabase/supabaseConfig";
 
 const FileUpload = () => {
   const [errorMsg, setErrorMsg] = useState("Erro!");

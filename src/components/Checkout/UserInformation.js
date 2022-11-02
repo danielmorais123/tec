@@ -1,15 +1,16 @@
-import { Button, Modal, Timeline } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { faCreditCard, faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import TextInput from "./TextInput";
-import TextArea from "./TextArea";
-import SelectInput from "./SelectInput";
-import { supabase } from "../supabase/supabaseConfig";
-import { useAuth } from "../auth/useAuth";
+import TextInput from "../TextInputs/TextInput";
+import TextArea from "../TextInputs/TextArea";
+import SelectInput from "../TextInputs/SelectInput";
+import { supabase } from "../../supabase/supabaseConfig";
+import { useAuth } from "../../auth/useAuth";
 import Address from "./Address";
 import PaymentMethodCard from "./PaymentMethodCard";
 import { PayPalButtons } from "@paypal/react-paypal-js";
+
 const UserInformation = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -22,10 +23,6 @@ const UserInformation = () => {
   const [success, setSuccess] = useState(false);
 
   const { authUser } = useAuth();
-
- 
-
-
 
   useEffect(() => {
     if (success) {
@@ -164,7 +161,11 @@ const UserInformation = () => {
             <TextArea value={address} setValue={setAddress} />
           </div>
           <div className="mt-4 flex  flex-wrap justify-between">
-            <SelectInput value={country} setValue={setCountry} />
+            <SelectInput
+              value={country}
+              setValue={setCountry}
+              options={["Portugal", "France", "Italy", "Germany"]}
+            />
             <TextInput
               title="City"
               placeholder="Lisboa"
@@ -227,9 +228,9 @@ const UserInformation = () => {
       <div className="w-full flex justify-end ">
         <button
           onClick={(e) => {
-            setOpenPaymentModal(true)
-            submitData(e)
-          } }
+            setOpenPaymentModal(true);
+            submitData(e);
+          }}
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           <svg
