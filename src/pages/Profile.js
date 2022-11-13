@@ -4,7 +4,9 @@ import { useAuth } from "../auth/useAuth";
 
 import NavbarIntegrated from "../components/Navbar/NavbarIntegrated";
 import PersonalInformation from "../components/Profile/PersonalInformation";
+import UserFullInformation from "../components/Profile/UserFullInformation";
 import UserProfileCard from "../components/Profile/UserProfileCard";
+import TableAbout from "../components/Tables/TableAbout";
 
 import { supabase } from "../supabase/supabaseConfig";
 
@@ -52,13 +54,13 @@ const Profile = ({
           setProductsInCart={setProductsInCart}
           users={users}
         />
-        <div className="flex flex-grow flex-col lg:flex-row w-fit my-3 mx-6  ">
-          <div className="flex flex-grow flex-col  justify-between">
-            <UserProfileCard />
+        <div className="flex flex-grow p-2  bg-gray-100 flex-col lg:flex-row">
+          <div className="flex overflow-x-hidden flex-col h-full w-[94%] xs:w-[98%] lg:w-fit min-h-[90vh] xs:min-h-[0vh] mx-2">
+            <UserProfileCard user={user} setUser={setUser} />
             <PersonalInformation />
           </div>
-          <div className="flex flex-grow flex-col ml-0 lg:ml-4 mt-2 lg:mt-0">
-            
+          <div className="flex flex-grow w-[94%] xs:w-[98%] mx-auto lg:w-fit lg:ml-4 lg:mr-2">
+            <UserFullInformation />
           </div>
         </div>
       </div>

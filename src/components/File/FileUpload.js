@@ -22,7 +22,7 @@ const FileUpload = () => {
     const result = await supabase
       .from("users")
       .select("email")
-      .eq("email", authUser.email);
+      .eq("email", authUser?.email);
 
     if (result.data.length === 0) {
       setErrorMsg("There was an error uploading your file");

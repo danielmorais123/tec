@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { faCartShopping, faCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faCheck, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { Rating } from "@mui/material";
 import { motion } from "framer-motion";
 
@@ -100,41 +100,53 @@ const ShoppingCard = (props) => {
 
         <div>
           <p className="p-2 font-bold text-black">{price}€</p>
-          <div className="flex items-center justify-between">
-            {!productsInCart.includes(id) ? (
-              <button
-                onClick={addItemToCart}
-                className="ml-2 bg-blue-500 hover:bg-blue-600 w-fit  focus:ring-4 focus:ring-blue-300 focus:outline-none transition font-medium px-3 p-2 rounded-lg text-sm text-white"
-              >
-                <FontAwesomeIcon icon={faCartShopping} className="pr-2" />
-                {"   "}
-                Add to Cart
-              </button>
-            ) : (
-              <button
-                onClick={removeItemFromCard}
-                className="ml-2 bg-red-500 hover:bg-red-600 w-fit  focus:ring-4 focus:ring-red-300 focus:outline-none transition font-medium px-3 p-2 rounded-lg text-sm text-white"
-              >
-                <FontAwesomeIcon icon={faCartShopping} className="pr-2" />
-                {"   "}
-                Remove from Cart
-              </button>
-            )}
-          </div>
+          {authUser?.id === userSeller?.id ? (
+            <button className="ml-2 bg-[#F7BE38] cursor-default hover:bg-[#F7BE38]/70 w-fit  focus:ring-4 focus:ring-blue-300 focus:outline-none transition px-3 p-2 rounded-lg text-sm text-black font-bold">
+              <FontAwesomeIcon icon={faCheck} />
+              {"   "}
+              Your Product
+            </button>
+          ) : (
+            <div className="flex items-center justify-between">
+              {!productsInCart.includes(id) ? (
+                <button
+                  onClick={addItemToCart}
+                  className="ml-2 bg-blue-500 hover:bg-blue-600 w-fit  focus:ring-4 focus:ring-blue-300 focus:outline-none transition font-medium px-3 p-2 rounded-lg text-sm text-white"
+                >
+                  <FontAwesomeIcon icon={faCartShopping} className="pr-2" />
+                  {"   "}
+                  Add to Cart
+                </button>
+              ) : (
+                <button
+                  onClick={removeItemFromCard}
+                  className="ml-2 bg-red-500 hover:bg-red-600 w-fit  focus:ring-4 focus:ring-red-300 focus:outline-none transition font-medium px-3 p-2 rounded-lg text-sm text-white"
+                >
+                  <FontAwesomeIcon icon={faCartShopping} className="pr-2" />
+                  {"   "}
+                  Remove from Cart
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <div
         className="absolute md:top-3 md:right-3 right-5 bottom-5 md:bottom-0 cursor-pointer"
         onClick={() => navigate(`/profile/${userSeller?.id}`)}
       >
-        <img
-          className="w-10 rounded-full h-10 bg-gray-300 object-contain "
-          src={
-            userSeller?.photoUrl
-              ? `https://hxedsbvrgndfewrzlynl.supabase.co/storage/v1/object/public/images/usersPhotos/${userSeller?.photoUrl}`
-              : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
-          }
-        />
+        <label className="btn btn-ghost !bg-transparent btn-circle avatar ">
+          <div className="w-8 rounded-full">
+            <img
+              className="object-contain"
+              src={
+                userSeller?.photoUrl
+                  ? `https://hxedsbvrgndfewrzlynl.supabase.co/storage/v1/object/public/images/usersPhotos/${userSeller?.photoUrl}`
+                  : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+              }
+            />
+          </div>
+        </label>
       </div>
     </motion.div>
   );

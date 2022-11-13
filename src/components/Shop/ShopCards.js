@@ -63,7 +63,7 @@ const ShopCards = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageFile, setImageFile] = useState({});
+  const [imageFile, setImageFile] = useState("");
   const [price, setPrice] = useState();
   const [selectedTab, setSelectedTab] = useState("horizontal");
   const [benefits, setBenefits] = useState([]);
@@ -73,6 +73,14 @@ const ShopCards = (props) => {
 
   const { authUser } = useAuth();
 
+  const productsFiltered = products.filter(
+    (product) =>
+      product?.title.toLowerCase().includes(query.toLowerCase()) &&
+      product?.price > value[0] &&
+      product?.price < value[1]
+  );
+  console.log({ products });
+  console.log({ productsFiltered });
   useMemo(() => {
     supabase
       .from("product")
@@ -107,12 +115,6 @@ const ShopCards = (props) => {
               onChange={(e, newValue) => setValue(newValue)}
               valueLabelDisplay="auto"
             />
-            <button
-              disabled
-              className="bg-purple-400 text-white px-3 py-1 rounded-lg"
-            >
-              <FontAwesomeIcon icon={faSearch} /> Search
-            </button>
           </div>
           <div className="flex  items-center">
             <React.Fragment>
@@ -131,6 +133,7 @@ const ShopCards = (props) => {
               </motion.div>
               {openModal ? (
                 <ModalCreateItem
+                  users={users}
                   setOpenModal={setOpenModal}
                   title={title}
                   setTitle={setTitle}
@@ -192,7 +195,7 @@ const ShopCards = (props) => {
           </div>
         </div>
         <div className="flex flex-row items-center flex-wrap">
-          {products.map((product, index) => (
+          {productsFiltered.map((product, index) => (
             <ShoppingCard
               key={index}
               product={product}

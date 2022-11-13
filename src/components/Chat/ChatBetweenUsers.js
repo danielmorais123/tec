@@ -86,7 +86,7 @@ const ChatBetweenUsers = ({
       }
     }
 
-    const result = supabase
+    supabase
       .from("messages")
       .insert({
         chatId: chatIdSelected,
@@ -234,6 +234,7 @@ const ChatBetweenUsers = ({
           </div> */}
 
             <input
+              disabled={chatIdSelected ? false : true}
               type="text"
               value={msg}
               onChange={(e) => setMsg(e.target.value)}

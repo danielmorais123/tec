@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import NavbarIntegrated from "../components/Navbar/NavbarIntegrated";
 import ShopCards from "../components/Shop/ShopCards";
@@ -19,7 +19,7 @@ const ShopPage = (props) => {
 
   const { authUser } = useAuth();
 
-  useMemo(() => {
+  useEffect(() => {
     supabase
       .from("cart")
       .select("products")

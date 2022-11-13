@@ -21,7 +21,10 @@ const PersonalInformation = () => {
           </p>
         </div>
         <div className="flex justify-center p-2 w-full xs:w-1/3 lg:w-fit">
-          <img src={social} className=" w-[200px] lg:w-[50%] object-contain p-1" />
+          <img
+            src={social}
+            className=" w-[200px] lg:w-[50%] object-contain p-1"
+          />
         </div>
       </div>
     </div>
